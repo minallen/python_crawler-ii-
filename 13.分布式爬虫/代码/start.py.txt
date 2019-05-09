@@ -1,0 +1,54 @@
+from scrapy import cmdline
+
+cmdline.execute("scrapy crawl sfw_spider".split())
+
+
+
+###########################
+    cmd:
+        进入到项目文件夹里面,执行：pip freeze > requirements.txt
+        就会生成一个文件，该文件里面有关于该项目的所有包的名字，上传该文件到linux服务器上。
+    linux：
+        pip install virtualenvwrapper               安装虚拟环境所需的工具
+        mkvirtualenv -p python3的路径 crawler.env   安装虚拟环境
+        把 requirements.txt里面的pywin32删掉，linux上不需要安装该包。
+        再执行：
+            pip install -r requirements.txt，就会读取文件里的包进行安装。
+            
+###########################            
+把scrapy 框架变成scrapy-redis框架：
+    1.  主逻辑代码里面：
+            1）from scrapy_redis.spiders import RedisSpider          
+            2）修改类的继承为：RedisSpider
+            3）注销start_urls
+            4）写redis_key = "......"     #引号里面随便写个名字
+    2.  设置settings中的内容：
+            1）
+                添加 SCHEDULER = "scrapy_redis.scheduler.Scheduler" 
+                确保request存储到redis中
+            
+            2）
+                DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter" 
+                确保所有爬虫共享相同的去重指纹
+                
+            3）
+                设置redis为Item pipline
+                ITEM_PIPELINES = {
+                                   'book.pipelines.RedisPipeline': 300,
+                                }
+            4)  
+                在redis中保持scrapy-redis用到的队列，不会清理redis中的队列，从而可以实现暂停和恢复的功能
+                SCHEDULER_PERSIST = True
+            5）
+                设置redis连接信息
+                REDIS_URL = "redis://192.16.16.1:6379"
+                或者
+                REDIS_HOST = "192.16.16.1"
+                REDIS_PORT = 6379
+            
+            
+            
+            
+            
+            
+          

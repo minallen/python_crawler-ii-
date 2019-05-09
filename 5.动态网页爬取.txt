@@ -1,0 +1,38 @@
+动态网页：
+    即整个网页没有发生变化，只是局部进行刷新，采用的Ajax技术。
+    
+获取Ajax数据的方式：
+
+    提示：
+        1.Ajax请求拿到的数据在浏览器的网页源代码中是找不到的，因为是通过别的url请求获取的！
+        2.Ajax请求拿到的数据在Elements中存在，但是在网页源代码中不存在！
+        
+    注意：        
+        1.  在不是Ajax请求数据情况时，request模块下执行的xpath，是针对网页源代码(response)执行的,所以可以根据Elements中
+        的内容写xpath,但如果是Ajax请求数据情况的话，Elements中的内容和网页源代码中的内容是不一致的，
+        所以，不能根据Elements中的内容写xpath。
+        
+        2.  selenium + chromdriver 这种爬取方式获取的driver.page_source能取到当前页面中的所有数据并且Ajax数据也能获取到。
+        
+        3.response中的内容 = 网页源代码中的内容
+        
+        
+    
+    1）分析URL接口
+        如何查找Ajax的url:
+            在network中寻找带有‘Ajax’的Name,判别请求方式是POST方式。
+    
+    
+    2）selenium + chromdriver
+        driver.page_source这种方式拿到的数据是和Elements中的数据是一模一样的。
+        
+    
+
+小技巧：
+    获取属性：
+    get_attribute("属性名字")
+    
+    
+selenium + chromdriver 爬取拉钩的代码需要敲一下！！！    
+    
+    

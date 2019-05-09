@@ -1,0 +1,85 @@
+Scrapy框架：
+    数据量大，爬取复杂度高的时候，用scrapy 框架。
+    
+Requests模块：    
+    requests 库主要用于一些小爬虫。
+
+Scrapy框架开始前：
+    1.在items.py文件中定义好字段模型
+    2.在settings.py文件中设置好'User-Agent'和机器协议选择False
+    3.在pipelines.py文件中定义好 __init__ ,open_spider 和 close_spider这几个方法 
+小技巧：
+    以二进制的方式打开文件(wb)之后，就不能指定encoding
+--------------------------------
+CrawlSpider:
+    scrapy genspider -t 爬虫名字 域名
+    
+    重要的两个类：
+    LinkExtractors
+        restrict_xpath:严格的xpath
+    Rule
+        callback:满足这个规则的url,应该要执行哪个回调函数
+        follow:根据该规则从response中提取的链接是否需要跟进
+--------------------------------
+代码测试：
+    工具：Scrapy-Shell
+    
+    进入到项目所在的文件夹中，
+    执行scrapy-shell url
+    url可以是start_url.
+--------------------------------   
+    
+scrapy 发送POST请求：
+    1.可以使用 yield scrapy.FormRequest(url, formdata, callback)方法发送POST请求。
+    2.如果希望程序执行一开始就发送POST请求，可以重写Spider类的start_requests(self) 方法，并且不再调用start_urls里的url。
+
+        class mySpider(scrapy.Spider):
+            # start_urls = ["http://www.example.com/"]
+
+            def start_requests(self):
+                url = 'http://www.renren.com/PLogin.do'
+
+                # FormRequest 是Scrapy发送POST请求的方法
+                yield scrapy.FormRequest(
+                    url = url,
+                    formdata = {"email" : "mr_mao_hacker@163.com", "password" : "axxxxxxxe"},
+                    callback = self.parse_page
+                )
+            def parse_page(self, response):
+                # do something    
+             
+    提示：POST方式登陆成功之后：
+            第一种情况：
+                去请求其他url的时候，如果也是post方式发送的请求，但是没有formdata时，用
+                yield scrapy.Requests(
+                    url,
+                    callback
+                )
+    
+            第二种情况：
+                去请求其他url的时候，如果也是post方式发送的请求，但是有formdata时，用
+                yield scrapy.FormRequests(
+                    url,
+                    callback,   #可有可无，但是没有callback回调函数的话，程序会自动去执行parse方法
+                                所以，给callback一个空的（不是给None!!!）方法
+                    formdata,
+                )
+        
+        总结：
+            1.POST方式登陆完成之后，继续请求其他url时，如果只是进行请求，而不进行修改操作的话，用yield scrapy.Requests()方式即可！
+            2.如果发送带有cookies信息的请求时，也可重写start_requests(self) 方法：
+                    def start_requests(self):
+                        cookies = "anonymid=jcokuqturos8ql; depovince=GW; jebecookies=f90c9e96-78d7-4f74-b1c8-b6448492995b|||||; _r01_=1; JSESSIONID=abcx4tkKLbB1-hVwvcyew; ick_login=ff436c18-ec61-4d65-8c56-a7962af397f4; _de=BF09EE3A28DED52E6B65F6A4705D973F1383380866D39FF5; p=90dea4bfc79ef80402417810c0de60989; first_login_flag=1; ln_uact=mr_mao_hacker@163.com; ln_hurl=http://hdn.xnimg.cn/photos/hdn421/20171230/1635/main_JQzq_ae7b0000a8791986.jpg; t=24ee96e2e2301bf2c350d7102956540a9; societyguester=24ee96e2e2301bf2c350d7102956540a9; id=327550029; xnsid=e7f66e0b; loginfrom=syshome; ch_id=10016"
+                        cookies = {i.split("=")[0]:i.split("=")[1] for i in cookies.split("; ")}
+                        # headers = {"Cookie":cookies}
+                        yield scrapy.Request(
+                            self.start_urls[0],
+                            callback=self.parse,
+                            cookies=cookies
+                            # headers = headers
+                        )
+
+--------------------------------           
+图形验证码识别：
+    可以运用第三方平台进行识别：阿里云    
+     

@@ -1,0 +1,13 @@
+ROBOTSTXT_OBEY = False
+
+#下载延迟秒数
+DOWNLOAD_DELAY = 1
+
+DOWNLOADER_MIDDLEWARES = {
+    #导入随机请求头
+   'fang.middlewares.UserAgentDownloadMiddleware': 543,
+}
+
+ITEM_PIPELINES = {
+   'fang.pipelines.FangPipeline': 300,
+}

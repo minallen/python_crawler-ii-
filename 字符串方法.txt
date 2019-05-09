@@ -1,0 +1,6 @@
+replace Ìæ»»:
+	name = 'allten'
+	name = name.replace('t','')
+	print(name)
+	
+	#allen

@@ -1,0 +1,3 @@
+scrapy startproject jianshu
+
+scrapy genspider -t crawl jianshu_spider "jianshu.com"

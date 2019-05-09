@@ -1,0 +1,23 @@
+房天下：
+
+1.获取所有城市url
+
+   http://www.fang.com/SoufunFamily.htm
+
+    例如：http://cq.fang.com/
+
+2.新房url
+
+  http://newhouse.sh.fang.com/house/s/
+
+3.二手房url
+
+  http://esf.sh.fang.com/
+
+4.北京新房和二手房url规则不同
+
+   http://newhouse.fang.com/house/s/
+
+   http://esf.fang.com/
+   
+   

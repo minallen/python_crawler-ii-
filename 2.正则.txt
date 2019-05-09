@@ -1,0 +1,242 @@
+正则：
+    
+    书写：先写正则，后写字符串
+   
+    match:只能从开头字符进行匹配
+    
+    '.':点能匹配任意字符，但是不能匹配‘\n’
+    
+    '\d':匹配数字（0-9）
+    
+    '\D':匹配任意的非数字，和 \d 相反
+    
+    ‘\s’:匹配空白字符（\n,\t,\r,空格）
+    
+    '\w':匹配a-z A-Z 数字 和下划线
+    
+    '\W':匹配和'\w'和相反
+    
+    '[]':组合，只要满足中括号中的任意字符，就能匹配
+    
+        text = "-0475-3111212"
+        ret = re.match('[\d\-]',text)
+        print(ret.group())
+        
+        中括号中只能匹配一个字符。
+        ret = re.match('[\d\-]+',text)，这样能匹配出多个字符。
+        
+    ‘*’:匹配0个或者多个任意字符，前面可以加上修饰条件，如:\d*    
+    
+    '+':匹配1个或者多个任意字符，前面可以加上修饰条件，如:\w+
+        text = "+a+b+cd"
+        ret = re.findall('\w+',text)
+        print(ret)
+    
+    '?':匹配0个或者1个，前面可以加上修饰条件，如:\w?
+    
+    '{}':中间写个数字，表示匹配几个字符
+        text = "gryt"
+        ret = re.findall('\w{3}',text)   表示3个字符当作一个整体
+        ret1 = re.match('\w{2}',text)    匹配2个字符 
+       
+    {m,n}:匹配m-n区间的字符。
+    
+    
+    
+    '''
+    #匹配手机号码
+    以1开头，第二位数字是3578中的一位，后面有9个数字
+    phone = "15247332714"
+    phone1 = "15247332714567"
+    phone_num = re.match('1[3578]\d{9}',phone1)
+    print(phone_num.group())
+    '''
+        
+    
+    '''
+    匹配邮箱地址
+    email = "1842972045@qq.com"
+    ret = re.match('\w+@[a-z0-9]+\.[a-z]+',email)
+    print(ret.group())
+    '''
+    
+    
+    '''
+    匹配URL
+    url = "http://www.ujiuye.cn/zt/pythonxxy/?wt.mc_id=ll-bdbc-pc-python-bj-17609913"
+    url1 = "https://www.ujiuye.cn/zt/pythonxxy/?wt.mc_id=ll-bdbc-pc-python-bj-17609913"
+    url2 = "ftp://www.ujiuye.cn/zt/pythonxxy/?wt.mc_id=ll-bdbc-pc-python-bj-17609913"
+    ret = re.match('(http|https|ftp)://[^\s]+',url2)
+    print(ret.group())
+    '''
+    
+    '''
+    匹配身份证号码
+    中括号只能匹配一个字符
+    ID = "152323199406022311"
+    ID_NUM = re.match('\d{17}[\dxX]',ID)
+    print(ID_NUM.group())
+    ''' 
+    
+    
+   '^':表示以……开始，但是放在‘[]’内，表示取反
+        text = "hello"
+        ret = re.match('^h',text)
+        print(ret.group())
+            
+    
+    '$':表示以……结尾
+        text = "allen@163.com"
+        ret =re.match('\w+@163.com$',text)
+        print(ret.group())
+
+        ret =re.match('[a-z]+@163.com$',text)
+        print(ret.group())
+    
+    
+    ‘|’：或的意思
+        text = "https"
+        ret = re.match('(http|https|ftp)$',text)
+        print(ret.group())
+    
+    
+    贪婪模式：
+        '''
+        text = "123456789"
+        ret = re.match('\d+',text)
+        print(ret.group())          #   0123456789
+
+        text = "123456789"
+        #? 表示让 + 的匹配次数达到最少，那就是1次，因为 + 的功能是匹配1至多个
+        ret1 = re.match('\d+?',text)
+        print(ret1.group())         #   1
+
+        text2 = "<h1>标题</h1>"
+        ret2 = re.match('<.+>',text2)
+        ret3 = re.match('<.+?>',text2)
+        print('贪婪：',ret2.group())
+        print('非贪婪：',ret3.group())
+
+        提取文本：
+        text3 = "<h1>标题</h1>"
+        ret4 = re.findall('<.*>(.*?)<.*>',text3)
+        print(ret4)
+
+        '''
+            
+    匹配0-100之间的数字
+        text = "23"
+        ret = re.match('0$|[1-9]\d?$|100$',text)
+        print(ret.group())
+            
+    
+    
+    '\':转义字符,让特殊字符失去特殊意义
+       【/：斜杠  \:反斜杠】
+        text1 = "apple is $1566.65335"
+        ret1 = re.search('\$\d+\.\d+',text1)
+
+        text2 = "apple is $16"
+        ret2 = re.search('\$\d+',text2)
+        print(ret2.group())
+     
+     
+    使用原生字符串 r ,让特殊字符失去特殊意义
+        text = r"\n"
+        print(text)
+    
+      
+        text = "\c"
+        ret = re.search(r'\\c',text)    加上r之后，引号之间的内容在python这一层不会进行解析，只当作普通字符串，再交给正则处理，
+                                        那么正则表达式中只剩下‘\\c’,则前面的 \ 让后面的 \ 失去特殊意义，最后只返回 \c
+        print(ret.group())
+            
+            
+    如何匹配出‘\n’:
+        text = "sasdfa\n"
+        ret = re.findall('.',text,re.S)
+        print(ret)    
+        
+        
+    分组：
+        text = "apple's price is $99,orange's price is $12"
+        #括号中的内容是分组的内容
+        ret = re.search('.*(\$\d+).*(\$\d+)',text)
+        print(ret.group())        #apple's price is $99,orange's price is $12       整个正则表达式中的内容可以看作一个大分组
+        #print(ret.group(1))      #$99      提取第一个分组
+        #print(ret.group(2))      #$12      提取第二个分组
+        #print(ret.group(1,2))    #('$99', '$12')       提取第一个分组和第二个分组
+        #print(ret.groups())      #('$99', '$12')       提取所有包含的小分组        整个正则表达式中的内容可以看作一个大分组
+     
+    
+    findall:找出所有满足条件的，返回的是一个列表    
+        text = "apple's price is $99,orange's price is $12"
+        ret = re.findall('\$\d+',text)
+        print(ret)
+            
+    
+    sub 替换：
+        text = "apple's price is $99,orange's price is $12"
+        ret = re.sub('\$\d+','$0',text)         #apple's price is $0,orange's price is $0
+        ret1 = re.sub('\$\d+','$0',text,1)      #apple's price is $0,orange's price is $12   后面的1表示从前面数替换的个数
+        print(ret)
+        print(ret1)
+    
+    
+    split 分割字符串:
+        text1 = "ni hao hello world"
+        text2 = "ni hao hello@world"
+        ret1 = re.split(' ',text)
+        ret2 = re.split('[^a-zA-Z]',text)       用不符合a-zA-Z的字符串进行分割
+        print(ret1)
+        print(ret2)
+    
+        text = "ni hao hello@@world"            
+        ret = re.split('[^a-zA-Z]+',text)
+    
+    
+    match 方法用于查找字符串的头部（也可以指定起始位置），它是一次匹配，只要找到了一个匹配的结果就返回，而不是查找所有匹配的结果。
+    
+    search 方法用于查找字符串的任何位置，它也是一次匹配，只要找到了一个匹配的结果就返回，而不是查找所有匹配的结果，
+    
+    findall,当我们需要搜索整个字符串，获得所有匹配的结果时使用findall。
+    
+    
+    compile:先编译好，后期使用的时候直接调用即可。
+        
+        low版写法：
+            text = "apple's price is $9.94,orange's price is $12.5"
+            #先编译号提取的内容
+            r_obj = re.compile('\d+\.?\d*')
+            #直接传入编译内容和文本即可
+            ret = re.search(r_obj,text)
+            print(ret.group())
+
+            ret2 = re.findall(r_obj,text)
+            print(ret2)
+        
+        高级写法：
+            text = "apple's price is $9.94,orange's price is $12.5"
+            r = re.compile(r"""
+                \$\d+ #小数点前面的数字
+                \.?   #小数点本身
+                \d*   #小数点后面的数字
+            """,re.VERBOSE)
+            ret = re.findall(r,text)
+            print(ret)
+        
+        
+    正常情况下‘.’是不能匹配‘\n’的，但是加上re.DOTALL之后，就能匹配出'\n'
+        text = """
+            你好
+            世界
+
+        """
+        ret = re.findall('.',text,re.DOTALL)
+        ret1 = re.findall('.',text)
+        print(ret)
+        print(ret1)
+    
+    
+    
+    

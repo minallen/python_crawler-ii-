@@ -1,0 +1,68 @@
+urllib(urlretrieve)
+
+response.content():content是没有解码的bytes类型，所以用response.content.decode()
+
+response.text():是经过解码之后的数据，是按照python自己想的那样进行的解码，所以可能会出项乱码
+
+xpath返回的数据永远是列表！
+
+指定解析器：
+def parse_lagou_file():
+    parser = etree.HTMLParser(encoding='utf-8')
+    htmlElement = etree.parse("lagou.html",parser=parser)
+    print(etree.tostring(htmlElement, encoding='utf-8').decode('utf-8'))
+    
+    
+用 etree.tostring的时候注意：直接用etree.tostring会出现乱码，所以先进行编码，然后进行解码   
+def parse_text():
+    htmlElement = etree.HTML(text)
+    print(etree.tostring(htmlElement,encoding='utf-8').decode("utf-8"))  
+
+# 获取所有的职位信息（纯文本）
+trs = html.xpath("//tr[position()>1]")
+positions = []
+for tr in trs:
+    # 在某个标签下，再执行xpath函数，获取这个标签下的子孙元素
+    # 那么应该在//之前加一个点，代表是在当前元素下获取
+    href = tr.xpath(".//a/@href")[0]
+    fullurl = 'http://hr.tencent.com/' + href
+    title = tr.xpath("./td[1]//text()")[0]
+    category = tr.xpath("./td[2]/text()")[0]
+    nums = tr.xpath("./td[3]/text()")[0]
+    address = tr.xpath("./td[4]/text()")[0]
+    pubtime = tr.xpath("./td[5]/text()")[0]
+
+    position = {
+        'url': fullurl,
+        'title': title,
+        'category': category,
+        'nums': nums,
+        'address': address,
+        'pubtime': pubtime
+    }
+    positions.append(position)
+    
+print(positions)    
+
+
+BeautifulSoup:
+
+soup = BeautifulSoup(html,'解析器')
+
+bs底层会运用第三方的解析器引擎，然后把传入的html文件对象解析成树状结构，再进行提取。
+
+
+
+map函数 + lambda 函数：
+    冒号前的【变量】会自动遍历给定数据里面的值，然后依次执行冒号后面的函数，并且把执行结果返回。
+
+
+
+
+
+
+
+
+
+
+

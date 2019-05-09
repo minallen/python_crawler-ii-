@@ -1,0 +1,5 @@
+房天下：
+
+scrapy startproject fang
+
+scrapy genspider sfw_spider "fang.com"

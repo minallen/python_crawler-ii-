@@ -1,0 +1,46 @@
+爬虫之中间件：
+    process_request(self, request, spider)：
+    这个方法在下载器进行下载之前被调用。
+    执行这个方法如果返回的是response的话，就相当于用下载中间件替代了原有的Downloader,然后下载中间件将response返回给引擎。
+    
+    
+    process_response(self, request, response, spider)：
+    这个方法在下载器下载完数据，把数据传递给引擎之前被调用。
+    
+设置随机请求头：
+    浏览器随机请求头网站：
+        http://www.useragentstring.com/pages/useragentstring.php?typ=Browser
+    
+    
+
+scrapy框架有去重的功能：
+    就是已经发送过请求的url就不会在继续进行请求。要想重复请求同一个url 的话，写：dont_filter=True 
+
+
+有这样一种访问的情况：
+    当访问的次数增加到一定程度之后，可能就会出现验证码的情况，所以，对此情况，设置代理IP再进行访问，就不会出现验证码。
+
+
+独享代理IP需要 import base64
+
+
+在IP被识别为爬虫的情况下再用代理，每个IP代理也是需要花钱的。
+具体操作：
+        前提：
+            在process_request(self, request, spider)中设置代理。
+
+        在中间件中执行这个方法：process_response(self, request, response, spider)，
+        然后拿到response 的状态码，进行判断。
+        
+因为对代理IP操作的事情比较多，所以单独定义一个文件处理代理IP和端口。        
+
+给函数加上@property（装饰器）之后，可以将函数属性变成数据属性，就可以随便调用。
+
+
+request.meta中有proxy（当前IP和端口）。
+
+
+
+
+
+    
